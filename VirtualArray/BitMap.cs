@@ -35,7 +35,7 @@
         public void Print()
         {
             foreach (byte i in arr)
-                Console.WriteLine(i);
+                Console.WriteLine(Convert.ToString(i, 2).PadLeft(SizeOfElement, '0')); ;
         }
 
         public BitMap(int Length)
