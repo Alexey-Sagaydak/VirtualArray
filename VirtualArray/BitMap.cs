@@ -10,11 +10,17 @@
         {
             get
             {
+                if (i < 0 || i >= Length)
+                    throw new ArgumentOutOfRangeException(nameof(i));
+
                 int shift = SizeOfElement - i % SizeOfElement - 1;
                 return (byte)((arr[i / SizeOfElement] & (0b1 << shift)) > 0 ? 1 : 0);
             }
             set 
             {
+                if (i < 0 || i >= Length)
+                    throw new ArgumentOutOfRangeException(nameof(i));
+
                 if (!(value == 0 || value == 1))
                     throw new ArgumentException("Value must be 0 or 1");
 

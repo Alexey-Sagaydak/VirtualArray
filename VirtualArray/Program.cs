@@ -23,17 +23,32 @@ namespace VirtualArray
             BitMap[3] = 1;
             //BitMap[3] = 0;
 
-            BitMap[8] = 1;
-            //BitMap[8] = 0;
+            BitMap[9] = 1;
+            //BitMap[9] = 0;
 
             BitMap[49] = 1;
-            BitMap[49] = 0;
+            //BitMap[49] = 0;
 
             BitMap.Print();
 
             Console.WriteLine(BitMap[0]);
             Console.WriteLine(BitMap[3]);
-            Console.WriteLine(BitMap[49]);
+            try
+            {
+                Console.WriteLine(BitMap[499]);
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
+
+            try
+            {
+                BitMap[49] = 5;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
