@@ -3,7 +3,7 @@
     public class BitMap : IBitMap
     {
         public int Length { get; private set; }
-        private byte[] arr;
+        public byte[] arr { get; private set; }
         private int SizeOfElement = sizeof(byte) * 8;
 
         public byte this[int i]
@@ -36,6 +36,11 @@
         public void Initialize()
         {
             for (int i = 0; i < arr.Length; i++) arr[i] = 0;
+        }
+
+        public void Read(FileStream FileStream, BinaryReader Reader, string Signature)
+        {
+            arr = arr.Select(x => Reader.ReadByte()).ToArray();
         }
 
         public void Print()

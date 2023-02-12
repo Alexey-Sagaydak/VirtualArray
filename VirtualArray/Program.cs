@@ -21,7 +21,7 @@ namespace VirtualArray
             //BitMap[0] = 0;
 
             BitMap[3] = 1;
-            //BitMap[3] = 0;
+            BitMap[3] = 0;
 
             BitMap[9] = 1;
             //BitMap[9] = 0;
