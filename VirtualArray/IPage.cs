@@ -8,5 +8,6 @@
         DateTime LastCall { get; set; }
         long Number { get; set; }
         void Change(int index, int value);
+        void Delete(int index);
     }
 }

@@ -11,20 +11,25 @@ namespace VirtualArray
     {
         public static void Main()
         {
-            FileStream FileStream = new FileStream("1.bin", FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            BinaryReader Reader = new BinaryReader(FileStream);
-            BinaryWriter Writer = new BinaryWriter(FileStream);
+            VirtualArray arr = new VirtualArray(9);
+
+            //FileStream FileStream = new FileStream("1.bin", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            //BinaryReader Reader = new BinaryReader(FileStream);
+            //BinaryWriter Writer = new BinaryWriter(FileStream);
+
+            //VirtualArray arr = new VirtualArray(3);
+            //arr.Delete(152);
 
             //BitMap bitMap = new BitMap(16);
             //FileStream.Seek(1, SeekOrigin.Begin);
             //bitMap.Read(FileStream, Reader, "");
 
-            Page page = new Page(FileStream, Reader, 9, 0);
-            page.BitMap.Print();
-            page.Values[2] = 0;
-            page.Write(FileStream, Writer, "VM");
-            Console.WriteLine($"{page.Values[0]} {page.Values[1]}");
-            FileStream.Close();
+            //Page page = new Page(FileStream, Reader, 9, 0);
+            //page.BitMap.Print();
+            //page.Values[2] = 0;
+            //page.Write(FileStream, Writer, "VM");
+            //Console.WriteLine($"{page.Values[0]} {page.Values[1]}");
+            //FileStream.Close();
 
             //BitMap BitMap = new BitMap(50);
             //BitMap.Initialize();

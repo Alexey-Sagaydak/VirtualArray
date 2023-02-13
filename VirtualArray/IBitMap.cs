@@ -11,6 +11,5 @@ namespace VirtualArray
         void Print(); // УДАЛИТЬ
         byte[] arr { get; }
         void Write(FileStream FileStream, BinaryWriter Writer, string Signature);
-        void Delete(int index);
     }
 }

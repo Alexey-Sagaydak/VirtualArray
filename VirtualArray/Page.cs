@@ -51,6 +51,7 @@ namespace VirtualArray
             FileStream.Seek(sizeof(char) * Signature.Length + Number * (Length * sizeof(int) + BitMap.arr.Length * sizeof(bool)), SeekOrigin.Begin);
             BitMap.Write(FileStream, Writer, Signature);
             Array.ForEach(Values, i => Writer.Write(i));
+            Writer.Flush();
         }
 
         public void Change(int index, int value)
