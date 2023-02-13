@@ -16,7 +16,7 @@
                 int shift = SizeOfElement - i % SizeOfElement - 1;
                 return (byte)((arr[i / SizeOfElement] & (0b1 << shift)) > 0 ? 1 : 0);
             }
-            set 
+            set
             {
                 if (i < 0 || i >= Length)
                     throw new ArgumentOutOfRangeException(nameof(i));
@@ -41,6 +41,11 @@
         public void Read(FileStream FileStream, BinaryReader Reader, string Signature)
         {
             arr = arr.Select(x => Reader.ReadByte()).ToArray();
+        }
+
+        public void Write(FileStream FileStream, BinaryWriter Writer, string Signature)
+        {
+            Array.ForEach(arr, i => Writer.Write(i));
         }
 
         public void Print()
