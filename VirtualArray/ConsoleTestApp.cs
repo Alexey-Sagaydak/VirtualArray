@@ -38,12 +38,13 @@ namespace VirtualArray
 
                 Console.Clear();
 
+                Console.WriteLine("MENU\n1 - Set value\n2 - Get value\n3 - Delete value\n4 - Save and exit");
                 bool flag = true;
                 while (flag)
                 {
-                    Console.WriteLine("MENU\n1 - Set value\n2 - Delete value\n3 - Save and exit");
                     int index, value;
 
+                    Console.Write("Option: ");
                     switch (Console.ReadLine())
                     {
                         case "1":
@@ -56,17 +57,22 @@ namespace VirtualArray
 
                         case "2":
                             Console.Write("Index: ");
+                            Console.WriteLine(arr[int.Parse(Console.ReadLine())]);
+                            break;
+
+                        case "3":
+                            Console.Write("Index: ");
                             index = int.Parse(Console.ReadLine());
                             arr.Delete(index);
                             break;
 
-                        case "3":
+                        case "4":
                             arr.Dispose();
                             flag = false;
                             break;
                     }
 
-                    Console.Clear();
+                    Console.WriteLine();
                 }
             }
             catch (Exception ex)
