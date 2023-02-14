@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VirtualArray
+﻿namespace VirtualArray
 {
     public class Page : IPage
     {
@@ -28,12 +20,20 @@ namespace VirtualArray
         public IBitMap BitMap { get; set; }
         public int[] Values { get; set; }
 
-        private void Read(FileStream FileStream, BinaryReader Reader, string Signature)
-        { // ПРОБЛЕМА С CHAR
-            FileStream.Seek(sizeof(char) * Signature.Length + Number * (Length * sizeof(int) + BitMap.arr.Length * sizeof(bool)), SeekOrigin.Begin);
-            BitMap.Read(FileStream, Reader, Signature);
+        public Page(FileStream FileStream, BinaryReader Reader, int Length, long Number, string Signature = "VM", DateTime LastCall = new DateTime(), bool IsModified = false)
+        {
+            if (Length <= 0) throw new ArgumentException("Length must be positive");
+            if (Signature == null) throw new ArgumentException("Signature must not be null");
+            if (FileStream == null) throw new ArgumentException("FileStream must not be null");
 
-            Values = Values.Select(x => Reader.ReadInt32()).ToArray();
+            Values = new int[Length];
+            BitMap = new BitMap(Length);
+            this.Length = Length;
+            this.Number = Number;
+            this.IsModified = IsModified;
+            this.LastCall = LastCall;
+
+            Read(FileStream, Reader, Signature);
         }
 
         public void Write(FileStream FileStream, BinaryWriter Writer, string Signature)
@@ -59,20 +59,11 @@ namespace VirtualArray
             BitMap[index] = 0;
         }
 
-        public Page(FileStream FileStream, BinaryReader Reader, int Length, long Number, string Signature = "VM", DateTime LastCall = new DateTime(), bool IsModified = false)
+        private void Read(FileStream FileStream, BinaryReader Reader, string Signature)
         {
-            if (Length <= 0) throw new ArgumentException("Length must be positive");
-            if (Signature == null) throw new ArgumentException("Signature must not be null");
-            if (FileStream == null) throw new ArgumentException("FileStream must not be null");
-
-            Values = new int[Length];
-            BitMap = new BitMap(Length);
-            this.Length = Length;
-            this.Number = Number;
-            this.IsModified = IsModified;
-            this.LastCall = LastCall;
-
-            Read(FileStream, Reader, Signature);
+            FileStream.Seek(sizeof(char) * Signature.Length + Number * (Length * sizeof(int) + BitMap.arr.Length * sizeof(bool)), SeekOrigin.Begin);
+            BitMap.Read(FileStream, Reader, Signature);
+            Values = Values.Select(x => Reader.ReadInt32()).ToArray();
         }
     }
 }

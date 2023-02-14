@@ -6,6 +6,16 @@
         public byte[] arr { get; private set; }
         private int SizeOfElement = sizeof(byte) * 8;
 
+        public BitMap(int Length)
+        {
+            if (Length >= 0)
+                this.Length = Length;
+            else
+                throw new ArgumentException("Length must not be negative");
+
+            arr = new byte[(int)Math.Ceiling((double)Length / SizeOfElement)];
+        }
+
         public byte this[int i]
         {
             get
@@ -46,22 +56,6 @@
         public void Write(FileStream FileStream, BinaryWriter Writer, string Signature)
         {
             Array.ForEach(arr, i => Writer.Write(i));
-        }
-
-        public void Print()
-        {
-            foreach (byte i in arr)
-                Console.WriteLine(Convert.ToString(i, 2).PadLeft(SizeOfElement, '0')); ;
-        }
-
-        public BitMap(int Length)
-        {
-            if (Length >= 0)
-                this.Length = Length;
-            else
-                throw new ArgumentException("Length must not be negative");
-
-            arr = new byte[(int)Math.Ceiling((double)Length / SizeOfElement)];
         }
     }
 }
