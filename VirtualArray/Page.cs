@@ -23,17 +23,7 @@ namespace VirtualArray
             }
         }
 
-        private byte isModified;
-        public byte IsModified
-        {
-            get { return isModified; }
-            set
-            {
-                if (!(value == 0 || value == 1)) throw new ArgumentException("Value must be 0 ot 1");
-                isModified = value;
-            }
-        }
-
+        public bool IsModified { get; set; }
         public DateTime LastCall { get; set; }
         public IBitMap BitMap { get; set; }
         public int[] Values { get; set; }
@@ -69,7 +59,7 @@ namespace VirtualArray
             BitMap[index] = 0;
         }
 
-        public Page(FileStream FileStream, BinaryReader Reader, int Length, int Number, string Signature = "VM", DateTime LastCall = new DateTime(), byte IsModified = 0)
+        public Page(FileStream FileStream, BinaryReader Reader, int Length, long Number, string Signature = "VM", DateTime LastCall = new DateTime(), bool IsModified = false)
         {
             if (Length <= 0) throw new ArgumentException("Length must be positive");
             if (Signature == null) throw new ArgumentException("Signature must not be null");

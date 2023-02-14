@@ -21,26 +21,60 @@ namespace VirtualArray
 		private string FileName;
 		public long Length { get; private set; }
 
-		public int this[int i]
+		public int this[long i]
 		{
 			get
 			{
-				return 1;
+				int index = FindPageNumber(i);
+                Pages[index].LastCall = DateTime.Now;
+                return Pages[index].Values[i % PageCapacity];
 			}
 			set
 			{
-				
-			}
+                int index = FindPageNumber(i);
+				Pages[index].Change((int)(i % PageCapacity), value);
+				Pages[index].IsModified = true;
+				Pages[index].LastCall = DateTime.Now;
+				Pages[index].BitMap[(int)(i % PageCapacity)] = 1;
+            }
 		}
 
 		public void Delete(int index)
 		{
-			Console.WriteLine(Pages[0] == null);
-		}
+            int i = FindPageNumber(index);
+            Pages[index].IsModified = true;
+            Pages[index].LastCall = DateTime.Now;
+			Pages[i].BitMap[(int)(index % PageCapacity)] = 0;
+        }
 
-		private void FindPageNumber()
+		private int FindPageNumber(long index)
 		{
+			if (index < 0 || index >= Length)
+				throw new ArgumentOutOfRangeException(nameof(index));
 
+			long pageNumber = index / PageCapacity;
+			int nullPageIndex = -1, oldestCallPageIndex = -1;
+			DateTime oldestCallDate = DateTime.MaxValue;
+
+			for (int i = 0; i < Pages.Length; i++)
+			{
+				if (Pages[i] == null) nullPageIndex = i;
+				else if (Pages[i].Number == pageNumber) return i;
+				else if (Pages[i].LastCall < oldestCallDate)
+				{
+					oldestCallDate = Pages[i].LastCall;
+					oldestCallPageIndex = i;
+				}
+			}
+
+			if (nullPageIndex != -1) return nullPageIndex;
+
+			if (Pages[oldestCallPageIndex].IsModified)
+				Pages[oldestCallPageIndex].Write(FileStream, Writer, Signature);
+
+			Pages[oldestCallPageIndex] = new Page(FileStream, Reader, PageCapacity, pageNumber);
+
+			return oldestCallPageIndex;
 		}
 
 		private void InitializeFile()
@@ -62,7 +96,7 @@ namespace VirtualArray
 				if (c != BitConverter.ToChar(Reader.ReadBytes(2))) throw new FileLoadException("Bad signature");
 		}
 
-		public VirtualArray(long length, int pageNumber = 3, int pageCapacity = 512, string fileName = "default.bin")
+		public VirtualArray(long length, int pageNumber = 3, int pageCapacity = 512, string fileName = "array.bin")
 		{
 			if (fileName == null || fileName == "") throw new ArgumentNullException("Bad name of file");
 			FileName = fileName;
