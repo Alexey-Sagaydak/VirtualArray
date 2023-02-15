@@ -45,33 +45,39 @@ namespace VirtualArray
                     int index, value;
 
                     Console.Write("Option: ");
-                    switch (Console.ReadLine())
+                    try
                     {
-                        case "1":
-                            Console.Write("Index: ");
-                            index = int.Parse(Console.ReadLine());
-                            Console.Write("Value: ");
-                            value = int.Parse(Console.ReadLine());
-                            arr[index] = value;
-                            break;
+                        switch (Console.ReadLine())
+                        {
+                            case "1":
+                                Console.Write("Index: ");
+                                index = int.Parse(Console.ReadLine());
+                                Console.Write("Value: ");
+                                value = int.Parse(Console.ReadLine());
+                                arr[index] = value;
+                                break;
 
-                        case "2":
-                            Console.Write("Index: ");
-                            Console.WriteLine(arr[int.Parse(Console.ReadLine())]);
-                            break;
+                            case "2":
+                                Console.Write("Index: ");
+                                Console.WriteLine(arr[int.Parse(Console.ReadLine())]);
+                                break;
 
-                        case "3":
-                            Console.Write("Index: ");
-                            index = int.Parse(Console.ReadLine());
-                            arr.Delete(index);
-                            break;
+                            case "3":
+                                Console.Write("Index: ");
+                                index = int.Parse(Console.ReadLine());
+                                arr.Delete(index);
+                                break;
 
-                        case "4":
-                            arr.Dispose();
-                            flag = false;
-                            break;
+                            case "4":
+                                arr.Dispose();
+                                flag = false;
+                                break;
+                        }
                     }
-
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                     Console.WriteLine();
                 }
             }
