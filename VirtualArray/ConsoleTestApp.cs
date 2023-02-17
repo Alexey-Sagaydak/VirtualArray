@@ -8,13 +8,11 @@ namespace VirtualArray
 {
     public static class ConsoleTestApp
     {
-        public static void Run()
-        {
-            IVirtualArray arr = null;
-            try
-            {
-                string filename;
-                int numberOfPages, pageCapacity;
+       	public IVirtualArray arr { get; }
+				
+				private void Initialize() {
+							string filename;
+              int numberOfPages, pageCapacity;
 
                 Console.Write("Array length: ");
                 int length = int.Parse(Console.ReadLine());
@@ -28,8 +26,10 @@ namespace VirtualArray
                 {
                     Console.Write("Filename: ");
                     filename = Console.ReadLine();
+
                     Console.Write("Number of pages: ");
                     numberOfPages = int.Parse(Console.ReadLine());
+                    
                     Console.Write("Page capacity: ");
                     pageCapacity = int.Parse(Console.ReadLine());
 
@@ -37,24 +37,28 @@ namespace VirtualArray
                 }
 
                 Console.Clear();
-
-                Console.WriteLine("MENU\n1 - Set value\n2 - Get value\n3 - Delete value\n4 - Save and exit");
+						
+				}
+				
+				private void ShowMenu() {
                 bool flag = true;
                 while (flag)
                 {
+										Console.WriteLine("MENU\n1 - Set value\n2 - Get value\n3 - Delete value\n4 - Save and exit");
                     int index, value;
 
                     Console.Write("Option: ");
-                    try
-                    {
-                        switch (Console.ReadLine())
+										try {
+                      	switch (Console.ReadLine())
                         {
                             case "1":
                                 Console.Write("Index: ");
                                 index = int.Parse(Console.ReadLine());
-                                Console.Write("Value: ");
+                                
+																Console.Write("Value: ");
                                 value = int.Parse(Console.ReadLine());
-                                arr[index] = value;
+                                
+																arr[index] = value;
                                 break;
 
                             case "2":
@@ -72,19 +76,29 @@ namespace VirtualArray
                                 arr.Dispose();
                                 flag = false;
                                 break;
+
+														default:
+																break;
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
+                    } catch (Exception ex) {
+											Console.WriteLine(ex.Message);
+										}
+                    
                     Console.WriteLine();
                 }
+
+				}  
+				public static void Run()
+        {
+						try {
+								Initialize();
+								ShowMenu();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+					}
         }
     }
 }
