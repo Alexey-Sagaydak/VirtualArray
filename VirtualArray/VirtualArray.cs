@@ -163,7 +163,7 @@ namespace VirtualArray
 				Writer.Write(c);
 
             Writer.Write(Length);
-            Writer.Write(numberOfPages);
+            Writer.Write(PageCapacity);
 
             for (int i = 0; i < numberOfPages; i++)
 			{
