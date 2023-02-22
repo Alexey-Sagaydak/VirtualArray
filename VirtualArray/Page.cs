@@ -22,9 +22,12 @@
 
         public Page(FileStream FileStream, BinaryReader Reader, int Length, long Number, string Signature = "VM", DateTime LastCall = new DateTime(), bool IsModified = false)
         {
-            if (Length <= 0) throw new ArgumentException("Length must be positive");
-            if (Signature == null) throw new ArgumentException("Signature must not be null");
-            if (FileStream == null) throw new ArgumentException("FileStream must not be null");
+            if (Length <= 0)
+                throw new ArgumentException("Length must be positive");
+            if (Signature == null)
+                throw new ArgumentException("Signature must not be null");
+            if (FileStream == null)
+                throw new ArgumentException("FileStream must not be null");
 
             Values = new int[Length];
             BitMap = new BitMap(Length);
@@ -46,7 +49,8 @@
 
         public void Change(int index, int value)
         {
-            if (index >= Length) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index >= Length)
+                throw new ArgumentOutOfRangeException(nameof(index));
 
             Values[index] = value;
             BitMap[index] = 1;
@@ -54,7 +58,8 @@
 
         public void Delete(int index)
         {
-            if (index >= Length) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index >= Length)
+                throw new ArgumentOutOfRangeException(nameof(index));
 
             BitMap[index] = 0;
         }

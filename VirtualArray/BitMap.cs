@@ -45,7 +45,8 @@
 
         public void Initialize()
         {
-            for (int i = 0; i < arr.Length; i++) arr[i] = 0;
+            for (int i = 0; i < arr.Length; i++)
+                arr[i] = 0;
         }
 
         public void Read(FileStream FileStream, BinaryReader Reader, string Signature)

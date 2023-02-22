@@ -1,6 +1,8 @@
-﻿namespace VirtualArray
+﻿using System.Collections;
+
+namespace VirtualArray
 {
-    public interface IVirtualArray: IDisposable
+    public interface IArray: IDisposable, IEnumerable
     {
         int this[long i] { get; set; }
         long Length { get; }

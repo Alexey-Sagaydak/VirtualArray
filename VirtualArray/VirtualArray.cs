@@ -1,8 +1,9 @@
-﻿using System.Text;
+﻿using System.Collections;
+using System.Text;
 
 namespace VirtualArray
 {
-    public class VirtualArray : IVirtualArray
+    public class VirtualArray : IArray
     {
         private readonly string Signature = "VM";
         private readonly FileStream FileStream;
@@ -18,17 +19,21 @@ namespace VirtualArray
 
         public VirtualArray(long length, int pageNumber = 3, int pageCapacity = 512, string fileName = "array.bin")
         {
-            if (fileName == null || fileName == "") throw new ArgumentNullException("Bad name of file");
+            if (fileName == null || fileName == "")
+                throw new ArgumentNullException("Bad name of file");
             FileName = fileName;
 
-            if (pageNumber < 3) throw new ArgumentException("Number of pages must be >= 3");
+            if (pageNumber < 3)
+                throw new ArgumentException("Number of pages must be >= 3");
             PageNumber = pageNumber;
             Pages = new Page[PageNumber];
 
-            if (pageCapacity < 1) throw new ArgumentException("Page capacity must be >= 1");
+            if (pageCapacity < 1)
+                throw new ArgumentException("Page capacity must be >= 1");
             PageCapacity = pageCapacity;
 
-            if (length <= 0) throw new ArgumentException("Length must not be negative");
+            if (length <= 0)
+                throw new ArgumentException("Length must not be negative");
             Length = length;
 
             bool IsFileExist = File.Exists(FileName);
@@ -67,6 +72,8 @@ namespace VirtualArray
             }
         }
 
+
+
         public void Delete(long index)
         {
             int i = FindPageNumber(index);
@@ -74,8 +81,6 @@ namespace VirtualArray
             Pages[i].LastCall = DateTime.Now;
             Pages[i].BitMap[(int)(index % PageCapacity)] = 0;
         }
-
-        
 
         public bool IsEmpty(long index)
         {
@@ -91,7 +96,8 @@ namespace VirtualArray
         public void Dispose()
         {
             foreach (Page page in Pages)
-                if (page != null && page.IsModified) page.Write(FileStream, Writer, Signature);
+                if (page != null && page.IsModified)
+                    page.Write(FileStream, Writer, Signature);
             Writer.Flush();
             FileStream.Close();
         }
@@ -107,8 +113,10 @@ namespace VirtualArray
 
             for (int i = 0; i < Pages.Length; i++)
             {
-                if (Pages[i] == null) nullPageIndex = i;
-                else if (Pages[i].Number == pageNumber) return i;
+                if (Pages[i] == null)
+                    nullPageIndex = i;
+                else if (Pages[i].Number == pageNumber)
+                    return i;
                 else if (Pages[i].LastCall < oldestCallDate)
                 {
                     oldestCallDate = Pages[i].LastCall;
@@ -132,12 +140,15 @@ namespace VirtualArray
 
         private void InitializeFile()
         {
-            foreach (char c in Encoding.Unicode.GetBytes(Signature)) Writer.Write(c);
+            foreach (char c in Encoding.Unicode.GetBytes(Signature))
+                Writer.Write(c);
 
             for (int i = 0; i < (int)Math.Ceiling((double)Length / PageCapacity); i++)
             {
-                for (int j = 0; j < (int)Math.Ceiling((double)PageCapacity / 8); j++) Writer.Write((byte)0b11111111);
-                for (int j = 0; j < PageCapacity; j++) Writer.Write(0);
+                for (int j = 0; j < (int)Math.Ceiling((double)PageCapacity / 8); j++)
+                    Writer.Write((byte)0b11111111);
+                for (int j = 0; j < PageCapacity; j++)
+                    Writer.Write(0);
             }
 
             Writer.Flush();
@@ -146,7 +157,18 @@ namespace VirtualArray
         private void CheckSignature()
         {
             foreach (char c in Signature)
-                if (c != BitConverter.ToChar(Reader.ReadBytes(2))) throw new FileLoadException("Bad signature");
+                if (c != BitConverter.ToChar(Reader.ReadBytes(2)))
+                    throw new FileLoadException("Bad signature");
+        }
+
+        public ArrayEnumerator GetEnumerator() 
+        {
+            return new ArrayEnumerator(this);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return (IEnumerator)GetEnumerator();
         }
     }
 }
