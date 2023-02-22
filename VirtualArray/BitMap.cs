@@ -4,7 +4,8 @@
     {
         public int Length { get; private set; }
         public byte[] arr { get; private set; }
-        private int SizeOfElement = sizeof(byte) * 8;
+        private readonly int SizeOfElement = sizeof(byte) * 8;
+        private int shift;
 
         public BitMap(int Length)
         {
@@ -23,8 +24,8 @@
                 if (i < 0 || i >= Length)
                     throw new ArgumentOutOfRangeException(nameof(i));
 
-                int shift = SizeOfElement - i % SizeOfElement - 1;
-                return (byte)((arr[i / SizeOfElement] & (0b1 << shift)) > 0 ? 1 : 0);
+                CalculateShift(i);
+                return (byte)((arr[i / SizeOfElement] & ShiftValue(0b1)) > 0 ? 1 : 0);
             }
             set
             {
@@ -34,12 +35,11 @@
                 if (!(value == 0 || value == 1))
                     throw new ArgumentException("Value must be 0 or 1");
 
-                int shift = SizeOfElement - i % SizeOfElement - 1;
-
+                CalculateShift(shift);
                 if (value == 1)
-                    arr[i / SizeOfElement] |= (byte)(0b1 << shift);
+                    arr[i / SizeOfElement] |= ShiftValue(0b1);
                 else
-                    arr[i / SizeOfElement] &= (byte)(~(0b1 << shift));
+                    arr[i / SizeOfElement] &= (byte)~ShiftValue(0b1);
             }
         }
 
@@ -57,6 +57,15 @@
         public void Write(FileStream FileStream, BinaryWriter Writer, string Signature)
         {
             Array.ForEach(arr, i => Writer.Write(i));
+        }
+        private byte ShiftValue(byte value)
+        {
+            return (byte)(value << shift);
+        }
+
+        private void CalculateShift(int index)
+        {
+            shift =  SizeOfElement - index % SizeOfElement - 1;
         }
     }
 }

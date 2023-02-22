@@ -41,7 +41,7 @@
 
         public void Write(FileStream FileStream, BinaryWriter Writer, string Signature)
         {
-            FileStream.Seek(sizeof(char) * Signature.Length + Number * (Length * sizeof(int) + BitMap.arr.Length * sizeof(bool)), SeekOrigin.Begin);
+            FileStream.Seek(sizeof(char) * Signature.Length + sizeof(long) + sizeof(int) + Number * (Length * sizeof(int) + BitMap.arr.Length * sizeof(bool)), SeekOrigin.Begin);
             BitMap.Write(FileStream, Writer, Signature);
             Array.ForEach(Values, i => Writer.Write(i));
             Writer.Flush();
@@ -66,7 +66,7 @@
 
         private void Read(FileStream FileStream, BinaryReader Reader, string Signature)
         {
-            FileStream.Seek(sizeof(char) * Signature.Length + Number * (Length * sizeof(int) + BitMap.arr.Length * sizeof(bool)), SeekOrigin.Begin);
+            FileStream.Seek(sizeof(char) * Signature.Length + sizeof(long) + sizeof(int) + Number * (Length * sizeof(int) + BitMap.arr.Length * sizeof(bool)), SeekOrigin.Begin);
             BitMap.Read(FileStream, Reader, Signature);
             Values = Values.Select(x => Reader.ReadInt32()).ToArray();
         }
