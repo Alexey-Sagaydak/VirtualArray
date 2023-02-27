@@ -9,6 +9,6 @@
         long Number { get; set; }
         void Change(int index, int value);
         void Delete(int index);
-        void Write(FileStream FileStream, BinaryWriter Writer, string Signature);
+        void Write(Stream Stream, BinaryWriter Writer, string Signature);
     }
 }

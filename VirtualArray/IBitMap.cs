@@ -4,9 +4,9 @@
     {
         byte this[int i] { get; set; }
         int Length { get; }
-        void Read(FileStream FileStream, BinaryReader Reader, string Signature);
+        void Read(Stream Stream, BinaryReader Reader, string Signature);
         void Initialize();
         byte[] arr { get; }
-        void Write(FileStream FileStream, BinaryWriter Writer, string Signature);
+        void Write(Stream Stream, BinaryWriter Writer, string Signature);
     }
 }

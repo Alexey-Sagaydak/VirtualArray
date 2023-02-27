@@ -14,27 +14,29 @@ namespace VirtualArray
 		{
 			string filename;
 			int numberOfPages, pageCapacity;
+			
+			Console.Write("Filename: ");
+			filename = Console.ReadLine();
+			
+			bool isFileExist = File.Exists(filename);
+			FileStream fileStream = new FileStream(filename, FileMode.OpenOrCreate);
+			
+			Console.Write("Number of pages: ");
+			numberOfPages = int.Parse(Console.ReadLine());
 
-			Console.Write("Array length: ");
-			int length = int.Parse(Console.ReadLine());
-
-			Console.Write("Use default settings? (1, 0): ");
-			if (Console.ReadLine() == "1")
+			if (isFileExist)
 			{
-				arr = new VirtualArray(length);
+				arr = new VirtualArray(fileStream, 1, isFileExist, numberOfPages);
 			}
 			else
 			{
-				Console.Write("Filename: ");
-				filename = Console.ReadLine();
-
-				Console.Write("Number of pages: ");
-				numberOfPages = int.Parse(Console.ReadLine());
-
+				Console.Write("Array length: ");
+				int length = int.Parse(Console.ReadLine());
+	
 				Console.Write("Page capacity: ");
 				pageCapacity = int.Parse(Console.ReadLine());
 
-				arr = new VirtualArray(length, numberOfPages, pageCapacity, filename);
+				arr = new VirtualArray(fileStream, length, isFileExist, numberOfPages, pageCapacity);
 			}
 
 			Console.Clear();
@@ -78,7 +80,6 @@ namespace VirtualArray
 						case "4":
 							foreach (int i in arr)
 								Console.Write($"{i} ");
-								
 							break;
 
 						case "5":
@@ -89,6 +90,10 @@ namespace VirtualArray
 						default:
 							break;
 					}
+				}
+				catch (InvalidOperationException ex)
+				{
+					Console.WriteLine();
 				}
 				catch (Exception ex)
 				{

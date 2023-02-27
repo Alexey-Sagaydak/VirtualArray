@@ -21,7 +21,7 @@ namespace VirtualArray
         public bool MoveNext()
         {
             position++;
-            return (position < array.Length);
+            return (position < array.Length - 1);
         }
 
         public void Reset()
@@ -44,8 +44,12 @@ namespace VirtualArray
                 try
                 {
                     while (array.IsEmpty(position))
-                        MoveNext();
-                    return array[position];
+                        if (!MoveNext())
+                            throw new IndexOutOfRangeException(); 
+                           
+                    if (array.IsFilled(position))
+                        return array[position];
+                    return 0;
                 }
                 catch (IndexOutOfRangeException)
                 {

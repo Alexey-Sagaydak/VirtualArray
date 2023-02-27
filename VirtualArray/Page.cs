@@ -20,13 +20,13 @@
         public IBitMap BitMap { get; set; }
         public int[] Values { get; set; }
 
-        public Page(FileStream FileStream, BinaryReader Reader, int Length, long Number, string Signature = "VM", DateTime LastCall = new DateTime(), bool IsModified = false)
+        public Page(Stream Stream, BinaryReader Reader, int Length, long Number, string Signature = "VM", DateTime LastCall = new DateTime(), bool IsModified = false)
         {
             if (Length <= 0)
                 throw new ArgumentException("Length must be positive");
             if (Signature == null)
                 throw new ArgumentException("Signature must not be null");
-            if (FileStream == null)
+            if (Stream == null)
                 throw new ArgumentException("FileStream must not be null");
 
             Values = new int[Length];
@@ -36,13 +36,13 @@
             this.IsModified = IsModified;
             this.LastCall = LastCall;
 
-            Read(FileStream, Reader, Signature);
+            Read(Stream, Reader, Signature);
         }
 
-        public void Write(FileStream FileStream, BinaryWriter Writer, string Signature)
+        public void Write(Stream Stream, BinaryWriter Writer, string Signature)
         {
-            FileStream.Seek(sizeof(char) * Signature.Length + sizeof(long) + sizeof(int) + Number * (Length * sizeof(int) + BitMap.arr.Length * sizeof(bool)), SeekOrigin.Begin);
-            BitMap.Write(FileStream, Writer, Signature);
+            Stream.Seek(sizeof(char) * Signature.Length + sizeof(long) + sizeof(int) + Number * (Length * sizeof(int) + BitMap.arr.Length * sizeof(bool)), SeekOrigin.Begin);
+            BitMap.Write(Stream, Writer, Signature);
             Array.ForEach(Values, i => Writer.Write(i));
             Writer.Flush();
         }
@@ -64,10 +64,10 @@
             BitMap[index] = 0;
         }
 
-        private void Read(FileStream FileStream, BinaryReader Reader, string Signature)
+        private void Read(Stream Stream, BinaryReader Reader, string Signature)
         {
-            FileStream.Seek(sizeof(char) * Signature.Length + sizeof(long) + sizeof(int) + Number * (Length * sizeof(int) + BitMap.arr.Length * sizeof(bool)), SeekOrigin.Begin);
-            BitMap.Read(FileStream, Reader, Signature);
+            Stream.Seek(sizeof(char) * Signature.Length + sizeof(long) + sizeof(int) + Number * (Length * sizeof(int) + BitMap.arr.Length * sizeof(bool)), SeekOrigin.Begin);
+            BitMap.Read(Stream, Reader, Signature);
             Values = Values.Select(x => Reader.ReadInt32()).ToArray();
         }
     }

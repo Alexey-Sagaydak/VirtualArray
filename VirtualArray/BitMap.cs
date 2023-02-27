@@ -5,7 +5,6 @@
         public int Length { get; private set; }
         public byte[] arr { get; private set; }
         private readonly int SizeOfElement = sizeof(byte) * 8;
-        private int shift;
 
         public BitMap(int Length)
         {
@@ -24,8 +23,8 @@
                 if (i < 0 || i >= Length)
                     throw new ArgumentOutOfRangeException(nameof(i));
 
-                CalculateShift(i);
-                return (byte)((arr[i / SizeOfElement] & ShiftValue(0b1)) > 0 ? 1 : 0);
+                int shift = CalculateShift(i);
+                return (byte)((arr[i / SizeOfElement] & ShiftValue(0b1, shift)) > 0 ? 1 : 0);
             }
             set
             {
@@ -34,12 +33,12 @@
 
                 if (!(value == 0 || value == 1))
                     throw new ArgumentException("Value must be 0 or 1");
-
-                CalculateShift(shift);
+                
+                int shift = SizeOfElement - i % SizeOfElement - 1;
                 if (value == 1)
-                    arr[i / SizeOfElement] |= ShiftValue(0b1);
+                    arr[i / SizeOfElement] |= ShiftValue(0b1, shift);
                 else
-                    arr[i / SizeOfElement] &= (byte)~ShiftValue(0b1);
+                    arr[i / SizeOfElement] &= (byte)(~ShiftValue(0b1, shift));
             }
         }
 
@@ -49,23 +48,23 @@
                 arr[i] = 0;
         }
 
-        public void Read(FileStream FileStream, BinaryReader Reader, string Signature)
+        public void Read(Stream Stream, BinaryReader Reader, string Signature)
         {
             arr = arr.Select(x => Reader.ReadByte()).ToArray();
         }
 
-        public void Write(FileStream FileStream, BinaryWriter Writer, string Signature)
+        public void Write(Stream Stream, BinaryWriter Writer, string Signature)
         {
             Array.ForEach(arr, i => Writer.Write(i));
         }
-        private byte ShiftValue(byte value)
+        private byte ShiftValue(byte value, int shift)
         {
             return (byte)(value << shift);
         }
 
-        private void CalculateShift(int index)
+        private int CalculateShift(int index)
         {
-            shift =  SizeOfElement - index % SizeOfElement - 1;
+            return SizeOfElement - index % SizeOfElement - 1;
         }
     }
 }
