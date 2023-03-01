@@ -21,7 +21,7 @@ namespace VirtualArray
         public bool MoveNext()
         {
             position++;
-            return (position < array.Length - 1);
+            return (position < array.Length);
         }
 
         public void Reset()
